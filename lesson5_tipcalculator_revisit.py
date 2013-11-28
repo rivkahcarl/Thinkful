@@ -38,17 +38,42 @@
 
 import sys
 
-meal=sys.argv[1]
-tax_percent= sys.argv[2]
-tip = sys.argv[3]
+#meal=sys.argv[1]
+#tax_percent= sys.argv[2]
+#tip = sys.argv[3]
+#tax= float(tax_percent)* float(meal)
+#pre_tip = float(meal) + float(tax)
+#tip_tot= float(tip)*pre_tip 
+#total=  tip_tot + pre_tip
+
+#text = "The base cost of your meal was $%s \n You need to pay $%s for tax.\n Tipping at a rate of %s, you should leave $%s for the tip.\n The grand total of your meal is $%s" % (meal, tax, tip, tip_tot, total)
+#print text
+
+##Using OptionParser
+
+from optparse import OptionParser
+parser = OptionParser()
+
+parser.add_option("-m", "--meal", dest="meal_arg", help="meal cost", type="float")
+parser.add_option("-t", "--tax_rate", dest="tax_rate_arg", help="tax rate for meal", type="float")
+parser.add_option("-r", "--tip_rate", dest="tip_rate_arg", help="tip rate for meal", type="float")
+
+(options, args) = parser.parse_args()
+
+meal=options.meal_arg
+print meal
+tax_percent= options.tax_rate_arg
+print tax_percent
+tip = options.tip_rate_arg
+print tip
 tax= float(tax_percent)* float(meal)
+
 pre_tip = float(meal) + float(tax)
 tip_tot= float(tip)*pre_tip 
 total=  tip_tot + pre_tip
 
 text = "The base cost of your meal was $%s \n You need to pay $%s for tax.\n Tipping at a rate of %s, you should leave $%s for the tip.\n The grand total of your meal is $%s" % (meal, tax, tip, tip_tot, total)
 print text
-
 
 
 
