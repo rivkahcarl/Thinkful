@@ -72,7 +72,7 @@ pre_tip = float(meal) + float(tax)
 tip_tot= float(tip)*pre_tip 
 total=  tip_tot + pre_tip
 
-text = "The base cost of your meal was $%s \n You need to pay $%s for tax.\n Tipping at a rate of %s, you should leave $%s for the tip.\n The grand total of your meal is $%s" % (meal, tax, tip, tip_tot, total)
+text = "The base cost of your meal was $%s \nYou need to pay $%s for tax.\nTipping at a rate of %s, you should leave $%s for the tip.\nThe grand total of your meal is $%s" % (meal, tax, tip, tip_tot, total)
 print text
 
 
