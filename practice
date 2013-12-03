@@ -1,0 +1,8 @@
+from optparser import OptionParser 
+parser= OptionParser()
+
+parser.add_option("-m","--meal" dest="meal_arg", help="")
+
+(options, args) = parser.parse_args()
+
+print options.first_arg
