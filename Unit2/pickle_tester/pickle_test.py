@@ -1,6 +1,6 @@
 import unittest
 import pickle
-from pickler import list_pickler, unpickler
+from Pickler import pickler
 
 class PickleAndUnpickle(unittest.TestCase):
 
@@ -8,3 +8,8 @@ class PickleAndUnpickle(unittest.TestCase):
         my_list = self.list_pickler.list1()
         another_list = self.unpickler.list1()
         self.assertEqual(my_list, another_list)
+
+    def setUp(self):
+        self.pickler = Pickler()
+        self.pickler.list_pickler(list1)
+        self.pickler.unpickler(list1)

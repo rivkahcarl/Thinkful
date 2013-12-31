@@ -1,13 +1,15 @@
-class pickler(object):
+class Pickler(object):
 
-    def list_pickler(self, list1):
+    def list_pickler(self, list1, picklefile):
         list1 = [1, 2, 3]
-        output = open('test.p', 'wb')
+        picklefile = open('test.p', 'wb')
         pickle.dump(list1, output)
-        output.close()
+        picklefile.close()
 
 
-    def unpickler(self, list1):
-        picklefile = open('test.p', 'rb')
+    def unpickler(self, picklefile1):
+        picklefile = open(picklefile, 'rb')
         list1 = pickle.load(picklefile)
         picklefile.close()
+        return list1
+        
