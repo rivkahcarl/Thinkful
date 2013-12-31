@@ -14,7 +14,7 @@ class AboutTuples(Koan):
         try:
             count_of_three[2] = "three"
         except TypeError as ex:
-            self.assertMatch(__, ex[0])
+            self.assertMatch("'tuple' object does not support item assignment", ex[0])
 
     def test_tuples_are_immutable_so_appending_is_not_possible(self):
         count_of_three = (1, 2, 5)
@@ -25,7 +25,7 @@ class AboutTuples(Koan):
 
             # Note, assertMatch() uses regular expression pattern matching,
             # so you don't have to copy the whole message.
-            self.assertMatch(__, ex[0])
+            self.assertMatch("'tuple' object has no attribute 'append'", ex[0])
 
         # Tuples are less flexible than lists, but faster.
 
@@ -36,7 +36,7 @@ class AboutTuples(Koan):
         list_count.append("boom")
         count_of_three = tuple(list_count)
 
-        self.assertEqual(__, count_of_three)
+        self.assertEqual((1, 2, 5, 'boom'), count_of_three)
 
     def test_tuples_of_one_look_peculiar(self):
         self.assertEqual(__, (1).__class__)
