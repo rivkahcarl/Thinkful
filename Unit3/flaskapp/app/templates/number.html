@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+  
+{% block content %}
+  <h2>Number</h2>
+  <p>This is a Number page for the Intro to Flask article.</p>
+      {% if num>0 or num2>0 %}
+        <p>This is addition of two numbers in url {{num}} + {{num2}}. The result is {{result}}. </p>
+      {% else %}
+        <p>You have not entered correct numbers. </p>
+  {% endif %}
+{% endblock %}
+
+
