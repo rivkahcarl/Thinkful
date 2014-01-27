@@ -11,7 +11,7 @@ from pymongo import MongoClient
 from noodletricks import getByDot
 
 database = 'K12'
-connection = pymongo.MongoClient(host="ec2-54-234-20-178.compute-1.amazonaws.com", port=27017)
+connection = pymongo.MongoClient(host="ec2-54-226-101-255.compute-1.amazonaws.com", port=27017)
 db = getattr(connection,database)
 coll=db['production']
 #sys.exit(0)
@@ -31,15 +31,19 @@ def count_for_list(listvariablename):
         itemname = i
         listcount = db.production.find({listvariablename:itemname}).count()
         list_results[itemname] = listcount
-    print list_results
-    return(list_results)
+    #print list_results
+    return list_results
 
 def count_nones_and_exists(variablename):
     numexists = db.production.find({variablename:{'$exists': 'true'}}).count()
     numnones = db.production.find({variablename: None}).count()
     numnonones = db.production.find({variablename:{'$ne': None}}).count()
     nonexcounts ={'number_of_values':numnonones, 'number_of_nulls': numnones, 'number_exists': numexists}
-    print nonexcounts
+    #print nonexcounts
+    return nonexcounts
+
+def count_with_details(variablename):
+    return 'not yet complete'
 
 """
 def stats(value):
@@ -49,7 +53,7 @@ def stats(value):
         minimum = value
     return minimum, maximum
 """
-
+"""
 
 for value in [5,7,3,9,2, None]:
     value[0] = minimum = maximum = cumsum
@@ -75,27 +79,29 @@ def count_with_details_min(variablename):
 
 """
 
-all_variables = ["institution.school_type", "institution.school_type_display", "institution.publicprivate", "institution.publicprivate_display", "institution.school_level","institution.faculty_fte", "institution.grad_4year_prct", "institution.url", "institution.school_gender", "institution.grade_low", "institution.grade_high", "institution.student_teacher_ratio", "institution.email", "institution.phone", "institution.video", "institution.accreditation", "institution.associations", "institution.description", "institution.curriculum_description", "institution.extracurricular_description", "institution.teacher_description", "institution.discipline_description", "institution.health_description","institution.facilities_description", "institution.mission_statement", "institution.charter", "institution.magnet", "institution.freereduced_lunch", "institution.finaid_titlei_school", "institution.activities.non_academic", "institution.activities.academic", "institution.special_needs_offer", "institution.special_needs.learning", "institution.special_needs.mental", "institution.special_needs.behavioral", "institution.special_needs.medical", "institution.special_needs.physical", "institution.religion_offer", "institution.religion.islamic", "institution.religion.jewish", "institution.religion.christian", "institution.religion.buddhist", "institution.sports.male", "institution.sports.female", "institution.endowment", "institution.dress_code", "institution.avg_class_size", "institution.special_classes"]
-list_count = ["institution.school_type", "institution.school_type_display", "institution.publicprivate", "institution.publicprivate_display", "institution.school_level", "institution.charter", "institution.magnet", "institution.accreditation", "institution.associations", "institution.activities.non_academic", "institution.activities.academic", "institution.special_needs_offer", "institution.special_needs.learning", "institution.special_needs.medical", "institution.special_needs.behavioral", "institution.special_needs.physical", "institution.religion.offer", "institution.religion.islamic", "institution.religion.jewish", "institution.religion.christian", "institution.religion.buddhist", "institution.sports.male", "institution.sports.female", "institution.special_classes"]
+all_variables = ["institution.school_type", "institution.school_type_display", "institution.publicprivate", "institution.publicprivate_display"] #, "institution.school_level","institution.faculty_fte", "institution.grad_4year_prct", "institution.url", "institution.school_gender", "institution.grade_low", "institution.grade_high", "institution.student_teacher_ratio", "institution.email", "institution.phone", "institution.video", "institution.accreditation", "institution.associations", "institution.description", "institution.curriculum_description", "institution.extracurricular_description", "institution.teacher_description", "institution.discipline_description", "institution.health_description","institution.facilities_description", "institution.mission_statement", "institution.charter", "institution.magnet", "institution.freereduced_lunch", "institution.finaid_titlei_school", "institution.activities.non_academic", "institution.activities.academic", "institution.special_needs_offer", "institution.special_needs.learning", "institution.special_needs.mental", "institution.special_needs.behavioral", "institution.special_needs.medical", "institution.special_needs.physical", "institution.religion_offer", "institution.religion.islamic", "institution.religion.jewish", "institution.religion.christian", "institution.religion.buddhist", "institution.sports.male", "institution.sports.female", "institution.endowment", "institution.dress_code", "institution.avg_class_size", "institution.special_classes"]
+list_count = ["institution.school_type", "institution.school_type_display", "institution.publicprivate", "institution.publicprivate_display"] #, "institution.school_level", "institution.charter", "institution.magnet", "institution.accreditation", "institution.associations", "institution.activities.non_academic", "institution.activities.academic", "institution.special_needs_offer", "institution.special_needs.learning", "institution.special_needs.medical", "institution.special_needs.behavioral", "institution.special_needs.physical", "institution.religion.offer", "institution.religion.islamic", "institution.religion.jewish", "institution.religion.christian", "institution.religion.buddhist", "institution.sports.male", "institution.sports.female", "institution.special_classes"]
 min_max_avg_count = ["institution.faculty_fte", "institution.grad_4year_prct", "institution.student_teacher_ratio", "institution.freereduced_lunch", "institution.avg_class_size"]
 detail_count = ["institution.phone", "institution.email", "institution.video"]
 
+def main():
+    finaloutputdict = {}
+    for variable in all_variables:
+        count1, count2, count3 = None, None, None
+        index_mong(variable)
+        count1 = count_nones_and_exists(variable)
+        if variable in list_count:
+            count2 = count_for_list(variable)
+        if variable in detail_count:
+            count3 = count_with_details(variable)
+        #if variable in min_max_avg_count:
+            #count_with_details_min(variable)
+        finaloutputdict[variable] = (count1, count2, count3)
+    return finaloutputdict
+          
 
-for variable in all_variables:
-    print variable
-    index_mong(variable)
-    count_nones_and_exists(variable)
-    if variable in list_count:
-        print variable
-        count_for_list(variable)
-    if variable in detail_count:
-        print variable
-        count_with_details(variable)
-    if variable in min_max_avg_count:
-        count_with_details_min(variable)
-        
- """           
-
+if __name__ == "__main__":
+    print main()
 
 
 
