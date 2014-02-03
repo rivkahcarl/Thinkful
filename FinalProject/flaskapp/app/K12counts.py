@@ -75,7 +75,7 @@ def main():
             count2 = count_for_list(variable)
         if variable in min_max_avg_count:
             count3 = stats(variable)
-            #print count3
+            print count3
         finaloutputdict[variable] = (count1, count2, count3)
     return finaloutputdict
           

@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="jumbo">
+    <h2>Statistics for Mongo Collection<h2>
+  </div>
+    <div>
+        {% for key, value in result.iteritems() %}
+        <p>{{ key }} : {{ value[2] }}</p>
+        {% endfor %}
+    </div>
+  
+{% endblock %}
+
+
