@@ -51,13 +51,15 @@ def stats(variablename):
         distinct_list.remove(None)
     if distinct_list != []:
         min_of_list = min(distinct_list)
-        max_of_list = max(distinct_list)   
+        max_of_list = max(distinct_list) 
+        mean_of_list = sum(distinct_list)/len(distinct_list)  
         stats['minimum_value'] = min_of_list
         stats['maximum_value'] = max_of_list
-        #stats['mean_value'] = mean_of_list
+        stats['mean_value'] = mean_of_list
     else:
         stats = None
     return stats
+
 
 all_variables = ["institution.school_type", "institution.school_type_display", "institution.publicprivate", "institution.publicprivate_display", "institution.school_level","institution.faculty_fte", "institution.grad_4year_prct", "institution.student_teacher_ratio", "institution.freereduced_lunch", "institution.avg_class_size"] #,  "institution.url", "institution.school_gender", "institution.grade_low", "institution.grade_high", "institution.email", "institution.phone", "institution.video", "institution.accreditation", "institution.associations", "institution.description", "institution.curriculum_description", "institution.extracurricular_description", "institution.teacher_description", "institution.discipline_description", "institution.health_description","institution.facilities_description", "institution.mission_statement", "institution.charter", "institution.magnet", "institution.finaid_titlei_school", "institution.activities.non_academic", "institution.activities.academic", "institution.special_needs_offer", "institution.special_needs.learning", "institution.special_needs.mental", "institution.special_needs.behavioral", "institution.special_needs.medical", "institution.special_needs.physical", "institution.religion_offer", "institution.religion.islamic", "institution.religion.jewish", "institution.religion.christian", "institution.religion.buddhist", "institution.sports.male", "institution.sports.female", "institution.endowment", "institution.dress_code", "institution.special_classes"]
 list_count = ["institution.school_type", "institution.school_type_display", "institution.publicprivate", "institution.publicprivate_display", "institution.school_level"] #,  "institution.charter", "institution.magnet", "institution.accreditation", "institution.associations", "institution.activities.non_academic", "institution.activities.academic", "institution.special_needs_offer", "institution.special_needs.learning", "institution.special_needs.medical", "institution.special_needs.behavioral", "institution.special_needs.physical", "institution.religion.offer", "institution.religion.islamic", "institution.religion.jewish", "institution.religion.christian", "institution.religion.buddhist", "institution.sports.male", "institution.sports.female", "institution.special_classes"]
@@ -71,12 +73,14 @@ def main():
         count1, count2, count3 = None, None, None
         index_mong(variable)
         count1 = count_nones_and_exists(variable)
+        #print count1
         if variable in list_count:
             count2 = count_for_list(variable)
         if variable in min_max_avg_count:
             count3 = stats(variable)
-            print count3
+            #print count3
         finaloutputdict[variable] = (count1, count2, count3)
+        #print finaloutputdict
     return finaloutputdict
           
 

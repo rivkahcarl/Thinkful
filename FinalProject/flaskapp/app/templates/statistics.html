@@ -5,7 +5,10 @@
   </div>
     <div>
         {% for key, value in result.iteritems() %}
-        <p>{{ key }} : {{ value[2] }}</p>
+        <p>Variable Name: {{key}}</p>
+            <p> Exists and Nulls:  {{ value[0] }} </p>
+            <p> Counts within List: {{ value[1] }}</p>
+            <p> Minimums and Maximums: {{ value[2] }}</p>
         {% endfor %}
     </div>
   
