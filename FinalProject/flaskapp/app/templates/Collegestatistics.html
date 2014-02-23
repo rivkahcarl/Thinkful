@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="jumbo">
+    <h2>Statistics for College Mongo Collection<h2>
+  </div>
+    <div>
+        {% for key, value in result.iteritems() %}
+        <p>Variable Name: {{key}}</p>
+            <p> Exists and Nulls:  {{ value[0] }} </p>
+            <p> Counts within List: {{ value[1] }}</p>
+            <p> Minimums and Maximums: {{ value[2] }}</p>
+        {% endfor %}
+    </div>
+  
+{% endblock %}
+
+
