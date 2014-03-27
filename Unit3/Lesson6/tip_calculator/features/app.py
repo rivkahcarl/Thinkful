@@ -10,6 +10,9 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 @app.route('/results', methods=['POST'])
+def calculate_tip():
+    
+
 def results():
   return render_template('results.html')
 

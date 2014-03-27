@@ -9,13 +9,57 @@ import csv
 import sys
 import numpy as np
 from pymongo import MongoClient
-from noodletricks import getByDot
 
 database = 'postsecondary'
 connection = pymongo.MongoClient(host="ec2-54-226-101-255.compute-1.amazonaws.com", port=27017)
 db = getattr(connection,database)
 coll=db['production']
 #sys.exit(0)
+
+def getByDot(obj, ref, strict=True):
+    """
+    Use MongoDB style 'something.by.dot' syntax to retrieve objects from Python dicts.
+    
+    This also accepts nested arrays, and accommodates the '.XX' syntax that variety.js
+    produces.
+    
+    Usage:
+       >>> x = {"top": {"middle" : {"nested": "value"}}}
+       >>> q = 'top.middle.nested'
+       >>> getByDot(x,q)
+       "value"
+    """
+    def gbd(obj,ref):
+        val = obj
+        tmp = ref
+        ref = tmp.replace(".XX","[0]")
+        if tmp != ref:
+    #        print("Warning: replaced '.XX' with [0]-th index")
+            pass
+        for key in ref.split('.'):
+            idstart = key.find("[")
+            embedslist = 1 if idstart > 0 else 0
+            if embedslist:
+                idx = int(key[idstart+1:key.find("]")])
+                kyx = key[:idstart]
+                try:
+                    val = val[kyx][idx]
+                except IndexError:
+                    print("Index: x['{}'][{}] does not exist.".format(kyx,idx))
+                    raise
+            else: 
+                val = val[key]
+        return(val)
+    
+    if strict:
+        return(gbd(obj,ref))
+    else:
+        try:
+            return(gbd(obj,ref))
+        except:
+            return('')
+
+
 
 def connection_to_mong(database, collection='production', hostname='localhost', portnumber=27017):
     datab=database
@@ -46,13 +90,17 @@ def count_nones_and_exists(variablename):
 def stats(variablename):
     stats = {}
     distinct_list = db.production.distinct(variablename)
+    clean_numbers_list = []
+    for i in distinct_list:
+        number = float(i)
+        clean_numbers_list.append(number)
     #mean_of_list = db.production.aggregate("")
-    if None in distinct_list:
-        distinct_list.remove(None)
-    if distinct_list != []:
-        min_of_list = min(distinct_list)
-        max_of_list = max(distinct_list) 
-        mean_of_list = sum(distinct_list)/len(distinct_list)  
+    if None in clean_numbers_list:
+        clean_numbers_list.remove(None)
+    if clean_numbers_list != []:
+        min_of_list = min(clean_numbers_list)
+        max_of_list = max(clean_numbers_list) 
+        mean_of_list = sum(clean_numbers_list)/len(clean_numbers_list)  
         stats['minimum_value'] = min_of_list
         stats['maximum_value'] = max_of_list
         stats['mean_value'] = mean_of_list

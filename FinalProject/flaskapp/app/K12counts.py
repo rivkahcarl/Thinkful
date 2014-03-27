@@ -9,13 +9,59 @@ import csv
 import sys
 import numpy as np
 from pymongo import MongoClient
-from noodletricks import getByDot
+
 
 database = 'K12'
 connection = pymongo.MongoClient(host="ec2-54-226-101-255.compute-1.amazonaws.com", port=27017)
 db = getattr(connection,database)
-coll=db['production']
+coll=db['productionV4d']
 #sys.exit(0)
+
+def getByDot(obj, ref, strict=True):
+    """
+    Use MongoDB style 'something.by.dot' syntax to retrieve objects from Python dicts.
+    
+    This also accepts nested arrays, and accommodates the '.XX' syntax that variety.js
+    produces.
+    
+    Usage:
+       >>> x = {"top": {"middle" : {"nested": "value"}}}
+       >>> q = 'top.middle.nested'
+       >>> getByDot(x,q)
+       "value"
+    """
+    def gbd(obj,ref):
+        val = obj
+        tmp = ref
+        ref = tmp.replace(".XX","[0]")
+        if tmp != ref:
+    #        print("Warning: replaced '.XX' with [0]-th index")
+            pass
+        for key in ref.split('.'):
+            idstart = key.find("[")
+            embedslist = 1 if idstart > 0 else 0
+            if embedslist:
+                idx = int(key[idstart+1:key.find("]")])
+                kyx = key[:idstart]
+                try:
+                    val = val[kyx][idx]
+                except IndexError:
+                    print("Index: x['{}'][{}] does not exist.".format(kyx,idx))
+                    raise
+            else: 
+                val = val[key]
+        return(val)
+    
+    if strict:
+        return(gbd(obj,ref))
+    else:
+        try:
+            return(gbd(obj,ref))
+        except:
+            return('')
+
+
+
 
 def connection_to_mong(database, collection='production', hostname='localhost', portnumber=27017):
     datab=database
@@ -73,14 +119,12 @@ def main():
         count1, count2, count3 = None, None, None
         index_mong(variable)
         count1 = count_nones_and_exists(variable)
-        #print count1
         if variable in list_count:
             count2 = count_for_list(variable)
         if variable in min_max_avg_count:
             count3 = stats(variable)
             #print count3
         finaloutputdict[variable] = (count1, count2, count3)
-        #print finaloutputdict
     return finaloutputdict
           
 

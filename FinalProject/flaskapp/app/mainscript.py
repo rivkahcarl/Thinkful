@@ -9,12 +9,12 @@ def home():
   return render_template('home.html')
 
 @app.route('/K12statistics')
-def statistics():
+def K12statistics():
     result = K12counts.main()
     return render_template('K12statistics.html', result = result)
 
 @app.route('/Collegestatistics')
-def statistics2():
+def Collegestatistics():
     result = Collegecounts.main()
     return render_template('Collegestatistics.html', result = result)
 
